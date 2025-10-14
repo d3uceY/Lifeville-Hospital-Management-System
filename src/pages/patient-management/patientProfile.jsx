@@ -20,13 +20,7 @@ export default function PatientProfile() {
         queryFn: () => viewRegisteredPatient(id),
         staleTime: 60 * 60 * 1000,
     });
-
-    // useEffect(() => {
-    //     if (patientData) {
-    //         setPatient(patientData);
-    //     }
-    // }, [patientData]);
-
+    
     // Helper to format a date string (ISO) to yyyy-mm-dd for the input fields.
     const formatDate = (dateString) => {
         if (!dateString) return 'N/A';

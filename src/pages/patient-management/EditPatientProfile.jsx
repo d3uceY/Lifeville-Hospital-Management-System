@@ -21,7 +21,7 @@ import { z } from "zod"
 import { Toaster } from "sonner"
 import { Button } from "@/components/ui/button"
 import { useParams } from "react-router-dom"
-
+import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
 // Format date from this 2023-09-30T23:00:00.000Z to this 2023-09-30
@@ -29,13 +29,13 @@ import { formatForDateInput } from "../../helpers/formatForDateInput"
 
 export default function EditPatientProfile() {
   const [isSubmitting, setIsSubmitting] = useState(false)
-
+  const queryClient = useQueryClient()
 
   // Get patient data from location
   const location = useLocation()
-  const patient = location.state
+  const patient = location.state;
   const { patient_id: id, surname, first_name } = useParams();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   //function that takes you back to the patient profile
   function goBackToProfile() {
@@ -53,6 +53,7 @@ export default function EditPatientProfile() {
     firstName: z.string().nonempty({ message: "First name is required" }),
     sex: z.string().nonempty({ message: "Sex is required" }),
     dateOfBirth: z.string().nonempty({ message: "Date of birth is required" }),
+    hospitalNumber: z.string().nonempty({ message: "Hospital number is required" }),
     phoneNumber: z
       .string()
       .nonempty({ message: "Phone number is required" })
@@ -95,6 +96,7 @@ export default function EditPatientProfile() {
       surname: patient?.surname || "",
       firstName: patient?.first_name || "",
       otherNames: patient?.other_names || "",
+      hospitalNumber: patient?.hospital_number || "",
 
       // Contact Information
       sex: patient?.sex || "",
@@ -139,10 +141,19 @@ export default function EditPatientProfile() {
   } = methods
 
   const onSubmit = async (values) => {
+    if (!Number(values.hospitalNumber)) {
+      toast.error("Hospital number must be a number")
+      return
+    }
+    const payload = {
+      ...values,
+      hospitalNumber: Number(values.hospitalNumber)
+    }
     const promise = async () => {
       try {
         setIsSubmitting(true)
-        const response = await updateRegisteredPatient(patient.patient_id, values)
+        const response = await updateRegisteredPatient(patient.patient_id, payload);
+        queryClient.invalidateQueries({ queryKey: ["patient"] });
         goBackToProfile()
         return response;
       } catch (err) {
@@ -273,6 +284,18 @@ export default function EditPatientProfile() {
                   {...register("otherNames")}
                 />
                 {errors.otherNames && <p className="text-red-500 text-sm mt-1">{errors.otherNames.message}</p>}
+              </div>
+              <div>
+                <Label className="text-sm font-medium mb-2 block text-gray-700" htmlFor="hospital_number">
+                  Hospital Number
+                </Label>
+                <Input
+                  className="text-black disabled:opacity-90 border-[#268a6477] bg-gray-50"
+                  id="hospital_number"
+                  type="number"
+                  {...register("hospitalNumber")}
+                />
+                {errors.hospitalNumber && <p className="text-red-500 text-sm mt-1">{errors.hospitalNumber.message}</p>}
               </div>
             </div>
           </CardContent>
