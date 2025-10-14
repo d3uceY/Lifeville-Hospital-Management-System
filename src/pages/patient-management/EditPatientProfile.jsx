@@ -21,7 +21,7 @@ import { z } from "zod"
 import { Toaster } from "sonner"
 import { Button } from "@/components/ui/button"
 import { useParams } from "react-router-dom"
-
+import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
 // Format date from this 2023-09-30T23:00:00.000Z to this 2023-09-30
@@ -29,13 +29,13 @@ import { formatForDateInput } from "../../helpers/formatForDateInput"
 
 export default function EditPatientProfile() {
   const [isSubmitting, setIsSubmitting] = useState(false)
-
+  const queryClient = useQueryClient()
 
   // Get patient data from location
   const location = useLocation()
-  const patient = location.state
+  const patient = location.state;
   const { patient_id: id, surname, first_name } = useParams();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   //function that takes you back to the patient profile
   function goBackToProfile() {
@@ -152,7 +152,8 @@ export default function EditPatientProfile() {
     const promise = async () => {
       try {
         setIsSubmitting(true)
-        const response = await updateRegisteredPatient(patient.patient_id, payload)
+        const response = await updateRegisteredPatient(patient.patient_id, payload);
+        queryClient.invalidateQueries({ queryKey: ["patient"] });
         goBackToProfile()
         return response;
       } catch (err) {
