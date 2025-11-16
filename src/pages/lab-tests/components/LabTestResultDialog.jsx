@@ -7,10 +7,9 @@ import { getLabTestStatusBadge } from "../../../helpers/getLabTestStatusBadge"
 import { formatDate } from "../../../helpers/formatDate"
 import PrintWrapper from "../../../components/print/print-wrapper"
 import LabTestResultPrint from "../../../components/print/prints/lab-test-result-print"
+import { ImageGalleryCard } from "../../../components/ImageGalleryCard"
 
 export function LabTestResultDialog({ testResult, children }) {
-
-
 
     return (
         <Dialog>
@@ -115,6 +114,12 @@ export function LabTestResultDialog({ testResult, children }) {
                             )}
                         </CardContent>
                     </Card>
+
+                    {/* Images Gallery */}
+                    <ImageGalleryCard
+                        title="Documents"
+                        images={testResult.images}
+                    />
 
                     {/* Comments & Notes */}
                     {testResult.comments && (

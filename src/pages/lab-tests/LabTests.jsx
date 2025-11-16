@@ -33,8 +33,6 @@ export default function LabTests() {
     queryFn: () => getPaginatedLabTests(page, pageSize, debouncedSearchTerm),
   })
 
-  console.log(data)
-
   const handleSearchTermChange = (value) => {
     setTerm(value)
   }
