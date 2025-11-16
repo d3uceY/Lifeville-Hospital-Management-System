@@ -549,9 +549,14 @@ export const createLabTest = async (labTestData) => {
 };
 
 export const updateLabTest = async (labTestId, labTestData) => {
+  const config = labTestData instanceof FormData 
+    ? { headers: { 'Content-Type': 'multipart/form-data' } }
+    : {};
+    
   const response = await api.put(
     `/lab-tests/${labTestId}`,
-    labTestData
+    labTestData,
+    config
   );
   return response.data;
 };
