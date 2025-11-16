@@ -305,7 +305,8 @@ export function EditLabTestResultDialog({ testResult, children }) {
                                     />
                                 </div>
                                 <p className="text-xs text-gray-500 mt-2">
-                                    Upload images of test results, scans, or related documentation. Multiple images can be selected.
+                                    <span className="block">Upload images of test results, scans, or related documentation. Multiple images can be selected.</span>
+                                    <span className="text-red-600 font-medium">Note: Uploading new images will discard previously uploaded images.</span>
                                 </p>
 
                                 {/* Image Preview */}
