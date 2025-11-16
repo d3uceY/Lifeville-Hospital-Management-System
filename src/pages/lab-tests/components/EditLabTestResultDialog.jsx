@@ -22,6 +22,8 @@ import { TestTube, User, Stethoscope, ClipboardList, Save, X, Upload, Image as I
 import { getStatusColor } from "../../../helpers/getLabStatusColor"
 import { updateLabTest } from "../../../providers/ApiProviders"
 import { useQueryClient } from "@tanstack/react-query"
+import { ImageGalleryCard } from "../../../components/ImageGalleryCard"
+import test from "node:test"
 
 export function EditLabTestResultDialog({ testResult, children }) {
 
@@ -337,6 +339,11 @@ export function EditLabTestResultDialog({ testResult, children }) {
                             </div>
                         </CardContent>
                     </Card>
+
+                    <ImageGalleryCard
+                        title="Uploaded lab tests"
+                        images={testResult.images}
+                    />
 
                     {/* Current Status Display */}
                     <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
