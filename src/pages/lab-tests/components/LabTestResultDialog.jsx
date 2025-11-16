@@ -7,10 +7,9 @@ import { getLabTestStatusBadge } from "../../../helpers/getLabTestStatusBadge"
 import { formatDate } from "../../../helpers/formatDate"
 import PrintWrapper from "../../../components/print/print-wrapper"
 import LabTestResultPrint from "../../../components/print/prints/lab-test-result-print"
+import { ImageGalleryCard } from "../../../components/ImageGalleryCard"
 
 export function LabTestResultDialog({ testResult, children }) {
-
-
 
     return (
         <Dialog>
@@ -91,14 +90,14 @@ export function LabTestResultDialog({ testResult, children }) {
                                     <Edit className="h-4 w-4 mr-2" />
                                     Edit
                                 </Button> */}
-                                <Button
+                                {/* <Button
                                     variant="outline"
                                     size="sm"
                                     className="border-[#268a6461] hover:bg-[#e6f2ed] text-[#106041] bg-transparent"
                                 >
                                     <Download className="h-4 w-4 mr-2" />
                                     Download
-                                </Button>
+                                </Button> */}
                             </div>
                         </CardHeader>
                         <CardContent className="pt-4">
@@ -115,6 +114,12 @@ export function LabTestResultDialog({ testResult, children }) {
                             )}
                         </CardContent>
                     </Card>
+
+                    {/* Images Gallery */}
+                    <ImageGalleryCard
+                        title="Documents"
+                        images={testResult.images}
+                    />
 
                     {/* Comments & Notes */}
                     {testResult.comments && (

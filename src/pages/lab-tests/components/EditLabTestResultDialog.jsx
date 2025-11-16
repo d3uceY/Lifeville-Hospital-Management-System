@@ -18,15 +18,19 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
-import { TestTube, User, Stethoscope, ClipboardList, Save, X } from "lucide-react"
+import { TestTube, User, Stethoscope, ClipboardList, Save, X, Upload, Image as ImageIcon } from "lucide-react"
 import { getStatusColor } from "../../../helpers/getLabStatusColor"
 import { updateLabTest } from "../../../providers/ApiProviders"
 import { useQueryClient } from "@tanstack/react-query"
+import { ImageGalleryCard } from "../../../components/ImageGalleryCard"
+import test from "node:test"
 
 export function EditLabTestResultDialog({ testResult, children }) {
 
     const [open, setOpen] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [imagePreview, setImagePreview] = useState(null)
+    const [selectedImages, setSelectedImages] = useState([])
     const queryClient = useQueryClient()
 
     const schema = z.object({
@@ -40,6 +44,7 @@ export function EditLabTestResultDialog({ testResult, children }) {
             required_error: "Please select a status",
         }),
         results: z.string().optional(),
+        images: z.any().optional(),
     })
 
     const methods = useForm({
@@ -51,6 +56,7 @@ export function EditLabTestResultDialog({ testResult, children }) {
             testType: testResult.test_type,
             status: testResult.status,
             results: testResult.results || "",
+            images: null,
         },
     })
 
@@ -59,19 +65,58 @@ export function EditLabTestResultDialog({ testResult, children }) {
         formState: { isValid, errors },
         register,
         control,
+        setValue,
     } = methods
 
+    const handleImageChange = (e) => {
+        const files = Array.from(e.target.files)
+        if (files.length > 0) {
+            // Add new files to existing ones instead of replacing
+            const updatedImages = [...selectedImages, ...files]
+            setSelectedImages(updatedImages)
+            setValue("images", updatedImages)
+
+            // Create preview URLs for new images and add to existing previews
+            const newPreviewUrls = files.map(file => URL.createObjectURL(file))
+            const updatedPreviews = [...(imagePreview || []), ...newPreviewUrls]
+            setImagePreview(updatedPreviews)
+        }
+        // Reset input to allow selecting the same file again if needed
+        e.target.value = ''
+    }
+
+    const removeImage = (index) => {
+        const newImages = selectedImages.filter((_, i) => i !== index)
+        const newPreviews = imagePreview.filter((_, i) => i !== index)
+
+        setSelectedImages(newImages)
+        setImagePreview(newPreviews)
+        setValue("images", newImages.length > 0 ? newImages : null)
+    }
+
     const onSubmit = async (values) => {
-        const payload = {
-            status: values.status,
-            results: values.results,
+        const formData = new FormData()
+
+        // Append text fields
+        formData.append("status", values.status)
+        if (values.results) {
+            formData.append("results", values.results)
+        }
+
+        // Append images if any
+        if (selectedImages.length > 0) {
+            selectedImages.forEach((image) => {
+                formData.append("images", image)
+            })
         }
 
         const promise = async () => {
             try {
                 setIsSubmitting(true)
-                const response = await updateLabTest(testResult.lab_test_id, payload)
+                const response = await updateLabTest(testResult.lab_test_id, formData)
                 setOpen(false)
+                setImagePreview(null)
+                setSelectedImages([])
                 queryClient.invalidateQueries({ queryKey: ["lab-tests"] })
                 return response
             } catch (err) {
@@ -235,6 +280,71 @@ export function EditLabTestResultDialog({ testResult, children }) {
                             </div>
                         </CardContent>
                     </Card>
+
+                    {/* Image Upload */}
+                    <Card className="border-[#268a6461] pt-0">
+                        <CardHeader className="pb-3 pt-6 bg-[#f0f8f4]">
+                            <CardTitle className="text-lg flex items-center gap-2">
+                                <ImageIcon className="h-4 w-4" />
+                                Test Images
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="pt-4">
+                            <div>
+                                <Label className="text-sm font-medium mb-2 block text-gray-700" htmlFor="images">
+                                    Upload Images
+                                </Label>
+                                <div className="flex items-center gap-4">
+                                    <Input
+                                        type="file"
+                                        id="images"
+                                        accept="image/*"
+                                        multiple
+                                        onChange={handleImageChange}
+                                        className="text-black border-[#268a6461] focus-visible:ring-[#268a6429] focus-visible:border-[#268a64] file:mr-4 file:py-0 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#106041] file:text-white hover:file:bg-[#0d4e34] cursor-pointer"
+                                    />
+                                </div>
+                                <p className="text-xs text-gray-500 mt-2">
+                                    <span className="block">Upload images of test results, scans, or related documentation. Multiple images can be selected.</span>
+                                    <span className="text-red-600 font-medium">Note: Uploading new images will discard previously uploaded images.</span>
+                                </p>
+
+                                {/* Image Preview */}
+                                {imagePreview && imagePreview.length > 0 && (
+                                    <div className="mt-4">
+                                        <p className="text-sm font-medium mb-3 text-gray-700">Preview:</p>
+                                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                            {imagePreview.map((preview, index) => (
+                                                <div key={index} className="relative group">
+                                                    <img
+                                                        src={preview}
+                                                        alt={`Preview ${index + 1}`}
+                                                        className="w-full h-32 object-cover rounded-lg border-2 border-[#268a6461] shadow-sm"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeImage(index)}
+                                                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
+                                                        title="Remove image"
+                                                    >
+                                                        <X className="h-4 w-4" />
+                                                    </button>
+                                                    <div className="absolute bottom-2 left-2 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded">
+                                                        {selectedImages[index]?.name}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <ImageGalleryCard
+                        title="Uploaded lab tests"
+                        images={testResult.images}
+                    />
 
                     {/* Current Status Display */}
                     <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">

@@ -99,7 +99,7 @@ export default function Register() {
             placeOfWorkAddress: "",
 
             religion: "",
-            nationality: "",
+            nationality: "Nigerian",
 
             nextOfKin: "",
             relationship: "",

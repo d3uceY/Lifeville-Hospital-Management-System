@@ -60,7 +60,6 @@ export default function NotificationsPage() {
         )
     }
 
-    // console.log(notifications)
 
     if (error) {
         return (
@@ -75,8 +74,6 @@ export default function NotificationsPage() {
     }
 
     const totalPages = notifications?.totalPages || Math.ceil((notifications?.totalItems || 0) / pageSize)
-    // console.log("Local:", new Date().toString());
-    // console.log("UTC:", new Date().toISOString());
     return (
         <div className="container mx-auto px-4 py-4">
             <div className="space-y-3">
