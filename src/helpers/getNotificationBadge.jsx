@@ -5,6 +5,7 @@ import { User } from "lucide-react"
 import { Bed } from "lucide-react"
 import { UserCheck } from "lucide-react"
 import { Bell } from "lucide-react"
+import { Activity } from "lucide-react"
 
 export const getNotificationBadge = (notification) => {
     const type = notification.type || "PATIENT"
@@ -50,6 +51,13 @@ export const getNotificationBadge = (notification) => {
                 <Badge className="text-xs px-2 py-0.5 bg-indigo-100 text-indigo-800 hover:bg-indigo-200 border-0 flex items-center gap-1">
                     <Repeat className="h-3 w-3" />
                     Visit
+                </Badge>
+            )
+        case "VITAL_SIGNS":
+            return (
+                <Badge className="text-xs px-2 py-0.5 bg-rose-100 text-rose-800 hover:bg-rose-200 border-0 flex items-center gap-1">
+                    <Activity className="h-3 w-3" />
+                    Vital Signs
                 </Badge>
             )
 
