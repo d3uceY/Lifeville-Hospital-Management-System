@@ -23,7 +23,6 @@ import { getStatusColor } from "../../../helpers/getLabStatusColor"
 import { updateLabTest } from "../../../providers/ApiProviders"
 import { useQueryClient } from "@tanstack/react-query"
 import { ImageGalleryCard } from "../../../components/ImageGalleryCard"
-import test from "node:test"
 
 export function EditLabTestResultDialog({ testResult, children }) {
 
@@ -343,7 +342,7 @@ export function EditLabTestResultDialog({ testResult, children }) {
 
                     <ImageGalleryCard
                         title="Uploaded lab tests"
-                        images={testResult.images}
+                        images={(testResult.images || [])}
                     />
 
                     {/* Current Status Display */}

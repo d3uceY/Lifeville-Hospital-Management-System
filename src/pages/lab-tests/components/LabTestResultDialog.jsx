@@ -1,7 +1,5 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { TestTube, User, Calendar, FileText, Stethoscope, ClipboardList, Edit, Download } from "lucide-react"
 import { getLabTestStatusBadge } from "../../../helpers/getLabTestStatusBadge"
 import { formatDate } from "../../../helpers/formatDate"
@@ -118,7 +116,7 @@ export function LabTestResultDialog({ testResult, children }) {
                     {/* Images Gallery */}
                     <ImageGalleryCard
                         title="Documents"
-                        images={testResult.images}
+                        images={(testResult.images || [])}
                     />
 
                     {/* Comments & Notes */}
