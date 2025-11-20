@@ -118,7 +118,7 @@ export function LabTestResultDialog({ testResult, children }) {
                     {/* Images Gallery */}
                     <ImageGalleryCard
                         title="Documents"
-                        images={testResult.images}
+                        images={(testResult.images || [])}
                     />
 
                     {/* Comments & Notes */}
