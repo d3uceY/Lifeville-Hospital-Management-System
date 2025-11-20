@@ -1,11 +1,18 @@
 import { Badge } from "@/components/ui/badge"
-import { Calendar, Repeat } from "lucide-react"
-import { FlaskConical } from "lucide-react"
-import { User } from "lucide-react"
-import { Bed } from "lucide-react"
-import { UserCheck } from "lucide-react"
-import { Bell } from "lucide-react"
-import { Activity } from "lucide-react"
+import {
+    Calendar,
+    Repeat,
+    FlaskConical,
+    User,
+    Bed,
+    UserCheck,
+    Bell,
+    Activity,
+    MessageSquare,
+    FileText,
+    Clipboard,
+    Stethoscope
+} from "lucide-react"
 
 export const getNotificationBadge = (notification) => {
     const type = notification.type || "PATIENT"
@@ -58,6 +65,34 @@ export const getNotificationBadge = (notification) => {
                 <Badge className="text-xs px-2 py-0.5 bg-rose-100 text-rose-800 hover:bg-rose-200 border-0 flex items-center gap-1">
                     <Activity className="h-3 w-3" />
                     Vital Signs
+                </Badge>
+            )
+        case "COMPLAINT":
+            return (
+                <Badge className="text-xs px-2 py-0.5 bg-amber-100 text-amber-800 hover:bg-amber-200 border-0 flex items-center gap-1">
+                    <MessageSquare className="h-3 w-3" />
+                    Complaint
+                </Badge>
+            )
+        case "DOCTOR_NOTE":
+            return (
+                <Badge className="text-xs px-2 py-0.5 bg-cyan-100 text-cyan-800 hover:bg-cyan-200 border-0 flex items-center gap-1">
+                    <FileText className="h-3 w-3" />
+                    Doctor Note
+                </Badge>
+            )
+        case "NURSE_NOTE":
+            return (
+                <Badge className="text-xs px-2 py-0.5 bg-teal-100 text-teal-800 hover:bg-teal-200 border-0 flex items-center gap-1">
+                    <Clipboard className="h-3 w-3" />
+                    Nurse Note
+                </Badge>
+            )
+        case "PHYSICAL_EXAMINATION":
+            return (
+                <Badge className="text-xs px-2 py-0.5 bg-violet-100 text-violet-800 hover:bg-violet-200 border-0 flex items-center gap-1">
+                    <Stethoscope className="h-3 w-3" />
+                    Physical Exam
                 </Badge>
             )
 
