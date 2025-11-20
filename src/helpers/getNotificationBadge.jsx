@@ -11,7 +11,8 @@ import {
     MessageSquare,
     FileText,
     Clipboard,
-    Stethoscope
+    Stethoscope,
+    ClipboardCheck
 } from "lucide-react"
 
 export const getNotificationBadge = (notification) => {
@@ -93,6 +94,13 @@ export const getNotificationBadge = (notification) => {
                 <Badge className="text-xs px-2 py-0.5 bg-violet-100 text-violet-800 hover:bg-violet-200 border-0 flex items-center gap-1">
                     <Stethoscope className="h-3 w-3" />
                     Physical Exam
+                </Badge>
+            )
+        case "DIAGNOSIS":
+            return (
+                <Badge className="text-xs px-2 py-0.5 bg-fuchsia-100 text-fuchsia-800 hover:bg-fuchsia-200 border-0 flex items-center gap-1">
+                    <ClipboardCheck className="h-3 w-3" />
+                    Diagnosis
                 </Badge>
             )
 
